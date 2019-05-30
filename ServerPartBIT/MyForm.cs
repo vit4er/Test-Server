@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ServerPartBIT
@@ -19,12 +13,36 @@ namespace ServerPartBIT
 
 		public class ReceiveState
 		{
-			public Socket LstSocket = null;
+			public Socket RcvSocket = null;
 			public const int BufferSize = 1024;
 			public byte[] Buff = new byte[BufferSize];
 			public StringBuilder Str = new StringBuilder();
 		}
 
+
+		private class SetClipboardHelper : STAHelper
+		{
+			readonly string _format;
+			readonly object _data;
+
+			public SetClipboardHelper(string format, object data)
+			{
+				_format = format;
+				_data = data;
+			}
+
+			protected override void Work()
+			{
+				var obj = new DataObject(_format, _data);
+				Clipboard.SetDataObject(obj, true);
+			}
+		}
+
+		public MyForm()
+		{
+			InitializeComponent();
+			RunMonitor();
+		}
 		private static void SendCallback(IAsyncResult res)
 		{
 			Socket handler = (Socket)res.AsyncState;
@@ -48,7 +66,7 @@ namespace ServerPartBIT
 			{
 				string text = String.Empty;
 				ReceiveState state = (ReceiveState)res.AsyncState;
-				Socket handler = state.LstSocket;
+				Socket handler = state.RcvSocket;
 				int bytesReceived = handler.EndReceive(res);
 
 				if (bytesReceived > 0)
@@ -56,12 +74,13 @@ namespace ServerPartBIT
 					state.Str.Append(Encoding.Unicode.GetString(state.Buff, 0, bytesReceived));
 
 					text = state.Str.ToString();
+					
 					Console.Write("Received from client: {0}", text);
-
-					/// тут пробуем запихнуть это все в клипборд...
+					///
+					/// шаманство...
 					/// 
-					PushToClipboard(text);
-
+					(new SetClipboardHelper(DataFormats.StringFormat, text)).Go();
+					
 					/// обработать на стороне клиента (почистить клипборд?)
 					Send(handler, "Clipboard content received by server.");
 					Console.WriteLine("Answer sent to client.");
@@ -83,8 +102,9 @@ namespace ServerPartBIT
 			Socket handler = listener.EndAccept(res);
 			ReceiveState state = new ReceiveState
 			{
-				LstSocket = handler
+				RcvSocket = handler
 			};
+
 			handler.BeginReceive(
 				state.Buff,
 				0,
@@ -93,12 +113,6 @@ namespace ServerPartBIT
 				new AsyncCallback(ReadCallback),
 				state
 			);
-		}
-
-		public MyForm()
-		{
-			InitializeComponent();
-			RunMonitor();
 		}
 
 		public static void RunMonitor()
@@ -137,11 +151,6 @@ namespace ServerPartBIT
 			{
 				throw ex;
 			}
-		}
-
-		private static void PushToClipboard(string text)
-		{
-			Clipboard.SetData(DataFormats.StringFormat, text);
 		}
 	}
 }

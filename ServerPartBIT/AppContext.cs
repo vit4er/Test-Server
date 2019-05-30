@@ -13,15 +13,6 @@ namespace ServerPartBIT
 		public MyAppContext()
 		{
 			form = new MyForm();
-			//MyForm form = new MyForm();
-			//Listener.RunListener();
-			Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
-			
-		}
-
-		private void OnApplicationExit(object s, EventArgs e)
-		{
-			Console.WriteLine("Application exit...");
 		}
 	}
 }
