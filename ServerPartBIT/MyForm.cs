@@ -139,18 +139,20 @@ namespace ServerPartBIT
 
 				srv.Bind(localPoin);
 				srv.Listen(10);
-				Console.WriteLine("Starting listener...");
+				Console.WriteLine("Start listener...");
 				while (true)
 				{
 					receiveDone.Reset();
 					srv.BeginAccept(new AsyncCallback(AcceptCallback), srv);
 					receiveDone.WaitOne();
 				}
+				
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				Console.WriteLine(ex);
 			}
+			Console.WriteLine("Выскочили из цикла...");
 		}
 	}
 }
