@@ -18,20 +18,18 @@ namespace ServerPartBIT
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			MyAppContext myContext = new MyAppContext();
+			//MyForm form = new MyForm();
 			using (NotifyIcon icon = new NotifyIcon())
 			{
 				icon.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 				icon.ContextMenu = new ContextMenu(
 					new[]
 					{
-						new MenuItem("Stop it!", (s,e) =>
-						{
-							Application.Exit();
-						})
+						new MenuItem("Stop it!", (s,e) => Application.Exit())
 					}
 				);
 				icon.Visible = true;
-				Application.Run();
+				Application.Run(myContext);
 				icon.Visible = false;
 			}
 		}
