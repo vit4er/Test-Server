@@ -36,8 +36,9 @@ namespace ServerPartBIT
 
 			protected override void Work()
 			{
-				var obj = new DataObject(_format, _data);
-				Clipboard.SetDataObject(obj, true);
+				//var obj = new DataObject(_format, _data);
+				//Clipboard.SetDataObject(obj, true);
+				Clipboard.SetData(_format, _data);
 			}
 		}
 
@@ -73,7 +74,7 @@ namespace ServerPartBIT
 
 					text = state.Str.ToString();
 
-					Console.Write("Received from client: {0}", text);
+					Console.WriteLine("Received from client: {0}", text);
 					///
 					/// шаманство...
 					/// 
@@ -102,7 +103,6 @@ namespace ServerPartBIT
 			{
 				RcvSocket = handler
 			};
-
 			handler.BeginReceive(
 				state.Buff,
 				0,
@@ -137,18 +137,20 @@ namespace ServerPartBIT
 
 				srv.Bind(localPoin);
 				srv.Listen(10);
-				Console.WriteLine("Starting listener...");
+				Console.WriteLine("Start listener...");
 				while (true)
 				{
 					receiveDone.Reset();
 					srv.BeginAccept(new AsyncCallback(AcceptCallback), srv);
 					receiveDone.WaitOne();
 				}
+				
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+				Console.WriteLine(ex);
 			}
+			Console.WriteLine("Выскочили из цикла...");
 		}
 	}
 }

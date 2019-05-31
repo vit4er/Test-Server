@@ -24,14 +24,11 @@ namespace ServerPartBIT
 				icon.ContextMenu = new ContextMenu(
 					new[]
 					{
-						new MenuItem("Stop it!", (s,e) =>
-						{
-							Application.Exit();
-						})
+						new MenuItem("Stop it!", (s,e) => Application.Exit())
 					}
 				);
 				icon.Visible = true;
-				Application.Run(new MyAppContext());
+				Application.Run(new MyForm());
 				icon.Visible = false;
 			}
 		}
