@@ -28,7 +28,7 @@ namespace ServerPartBIT
 					}
 				);
 				icon.Visible = true;
-				Application.Run(new MyForm());
+				Application.Run(new MyAppContext());
 				icon.Visible = false;
 			}
 		}
