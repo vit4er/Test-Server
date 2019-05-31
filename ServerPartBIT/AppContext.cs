@@ -9,10 +9,9 @@ namespace ServerPartBIT
 {
 	class MyAppContext: ApplicationContext
 	{
-		public static MyForm form;
 		public MyAppContext()
 		{
-			form = new MyForm();
+			new Listener().RunMonitor();
 		}
 	}
 }

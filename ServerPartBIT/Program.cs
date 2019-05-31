@@ -17,7 +17,7 @@ namespace ServerPartBIT
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			MyAppContext myContext = new MyAppContext();
+			//MyAppContext myContext = new MyAppContext();
 			using (NotifyIcon icon = new NotifyIcon())
 			{
 				icon.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
@@ -31,7 +31,7 @@ namespace ServerPartBIT
 					}
 				);
 				icon.Visible = true;
-				Application.Run(new MyForm());
+				Application.Run(new MyAppContext());
 				icon.Visible = false;
 			}
 		}

@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ServerPartBIT
 {
-	public partial class MyForm : Form
+	public class Listener
 	{
 		public static ManualResetEvent receiveDone = new ManualResetEvent(false);
 
@@ -38,11 +41,6 @@ namespace ServerPartBIT
 			}
 		}
 
-		public MyForm()
-		{
-			InitializeComponent();
-			RunMonitor();
-		}
 		private static void SendCallback(IAsyncResult res)
 		{
 			Socket handler = (Socket)res.AsyncState;
@@ -74,13 +72,13 @@ namespace ServerPartBIT
 					state.Str.Append(Encoding.Unicode.GetString(state.Buff, 0, bytesReceived));
 
 					text = state.Str.ToString();
-					
+
 					Console.Write("Received from client: {0}", text);
 					///
 					/// шаманство...
 					/// 
 					(new SetClipboardHelper(DataFormats.StringFormat, text)).Go();
-					
+
 					/// обработать на стороне клиента (почистить клипборд?)
 					Send(handler, "Clipboard content received by server.");
 					Console.WriteLine("Answer sent to client.");
@@ -115,7 +113,7 @@ namespace ServerPartBIT
 			);
 		}
 
-		public static void RunMonitor()
+		public void RunMonitor()
 		{
 			IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
 			IPAddress _address = null;
