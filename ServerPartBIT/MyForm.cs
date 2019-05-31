@@ -33,8 +33,9 @@ namespace ServerPartBIT
 
 			protected override void Work()
 			{
-				var obj = new DataObject(_format, _data);
-				Clipboard.SetDataObject(obj, true);
+				//var obj = new DataObject(_format, _data);
+				//Clipboard.SetDataObject(obj, true);
+				Clipboard.SetData(_format, _data);
 			}
 		}
 
@@ -74,13 +75,13 @@ namespace ServerPartBIT
 					state.Str.Append(Encoding.Unicode.GetString(state.Buff, 0, bytesReceived));
 
 					text = state.Str.ToString();
-					
-					Console.Write("Received from client: {0}", text);
+
+					Console.WriteLine("Received from client: {0}", text);
 					///
 					/// шаманство...
 					/// 
 					(new SetClipboardHelper(DataFormats.StringFormat, text)).Go();
-					
+
 					/// обработать на стороне клиента (почистить клипборд?)
 					Send(handler, "Clipboard content received by server.");
 					Console.WriteLine("Answer sent to client.");
@@ -104,7 +105,6 @@ namespace ServerPartBIT
 			{
 				RcvSocket = handler
 			};
-
 			handler.BeginReceive(
 				state.Buff,
 				0,
